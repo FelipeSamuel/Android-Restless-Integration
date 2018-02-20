@@ -17,6 +17,32 @@ public class Exemplos{
 
         return c.add(cliente);
     }
+  
+  public Cliente login(String telefone, String senha){
+
+        List<Condicao> condicoes = new ArrayList<>();
+        condicoes.add(new Condicao("celular", "eq", telefone));
+        condicoes.add(new Condicao("senha", "eq", senha));
+
+        ApiService<Cliente> slide = new ApiService<Cliente>(Cliente.class)
+                .baseUrl(BASE_URL)
+                .endPoint("cliente")
+                .condition(condicoes)
+                .build();
+
+        Model<Cliente> slides = slide.getAll();
+
+        String g = gson.toJson(slides.objects);
+        List<Cliente> slideList = gson.fromJson(g, new TypeToken<List<Cliente>>(){}.getType());
+
+        slides.objects = slideList;
+
+        if(slides.objects.size()>0) {
+            return slides.objects.get(0);
+        }else{
+            return null;
+        }
+    }
     
     
      public List<ItemCardapio> getAll(){
